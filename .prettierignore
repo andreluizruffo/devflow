@@ -4,3 +4,4 @@ coverage
 package-lock.json
 PLANO.md
 CLAUDE.md
+backend/src/generated

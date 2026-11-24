@@ -8,5 +8,5 @@
     "rootDir": ".",
     "types": ["node", "jest"]
   },
-  "include": ["src", "tests"]
+  "include": ["src", "tests", "prisma", "prisma.config.ts"]
 }

@@ -7,9 +7,19 @@
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "test": "node --experimental-vm-modules --disable-warning=ExperimentalWarning ../node_modules/jest/bin/jest.js",
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.10",
     "express": "^5.3.0",
     "zod": "^4.6.7"
   },
@@ -19,6 +29,7 @@
     "@types/node": "^26.6.7",
     "@types/supertest": "^7.2.1",
     "jest": "^30.5.2",
+    "prisma": "7.10.1",
     "supertest": "^7.3.2",
     "ts-jest": "^29.4.15",
     "tsx": "^4.23.15"

@@ -8,6 +8,27 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+
+    # PostgreSQL runs as a Docker container next to the job.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: devflow
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/devflow
+      DATABASE_URL_TEST: postgresql://postgres:postgres@localhost:5432/devflow_test
+
     steps:
       - uses: actions/checkout@v4
 
@@ -20,5 +41,14 @@ jobs:
       - run: npm run lint
       - run: npm run format:check
       - run: npm run typecheck
+
+      - name: Create test database
+        run: psql postgresql://postgres:postgres@localhost:5432/postgres -c "CREATE DATABASE devflow_test;"
+
+      - name: Apply migrations and seed
+        run: |
+          npm run db:deploy -w backend
+          npm run db:seed -w backend
+
       - run: npm test
       - run: npm run build
