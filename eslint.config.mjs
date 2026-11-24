@@ -1,0 +1,38 @@
+import js from '@eslint/js';
+import { defineConfig } from 'eslint/config';
+import prettier from 'eslint-config-prettier';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+
+export default defineConfig(
+  { ignores: ['**/dist', '**/coverage', '**/node_modules'] },
+  js.configs.recommended,
+  tseslint.configs.recommended,
+  {
+    rules: {
+      // Unused parameters are allowed when prefixed with "_" (e.g. Express error handler's _next).
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+    },
+  },
+  {
+    files: ['backend/**/*.ts', '**/*.{js,cjs,mjs}'],
+    languageOptions: { globals: globals.node },
+  },
+  {
+    files: ['frontend/**/*.{ts,tsx}'],
+    languageOptions: { globals: globals.browser },
+    plugins: { 'react-hooks': reactHooks, 'react-refresh': reactRefresh },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    },
+  },
+  // Must stay last: turns off style rules that would fight with Prettier.
+  prettier,
+);
