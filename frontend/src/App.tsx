@@ -1,12 +1,22 @@
+import { Navigate, Route, Routes } from 'react-router';
+import { LoginPage } from './features/auth/LoginPage';
+import { RegisterPage } from './features/auth/RegisterPage';
+import { GuestRoute, ProtectedRoute } from './features/auth/route-guards';
+import { DashboardPage } from './features/dashboard/DashboardPage';
+
 export function App() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-slate-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight">DevFlow</h1>
-        <p className="mt-3 text-slate-400">
-          Clients, projects and tasks for freelancers and small teams.
-        </p>
-      </div>
-    </main>
+    <Routes>
+      <Route element={<GuestRoute />}>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Route>
+
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<DashboardPage />} />
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }

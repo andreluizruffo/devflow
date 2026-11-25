@@ -1,17 +1,7 @@
 import { prisma } from '../../src/lib/prisma';
+import { resetDatabase } from '../helpers/db';
 
 // Database-level guarantees that back up the multi-tenancy rules in the services.
-
-async function resetDatabase() {
-  await prisma.$transaction([
-    prisma.task.deleteMany(),
-    prisma.project.deleteMany(),
-    prisma.client.deleteMany(),
-    prisma.organizationMember.deleteMany(),
-    prisma.organization.deleteMany(),
-    prisma.user.deleteMany(),
-  ]);
-}
 
 beforeEach(resetDatabase);
 

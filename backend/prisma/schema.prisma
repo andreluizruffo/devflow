@@ -50,6 +50,22 @@ model User {
 
   memberships   OrganizationMember[]
   assignedTasks Task[]
+  refreshTokens RefreshToken[]
+}
+
+// Long-lived session token. Only its SHA-256 hash is stored, never the token itself.
+// Each refresh revokes the used token and issues a new one (rotation).
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Organization {
